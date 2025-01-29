@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Landing Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Item List</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody id="tableId"></tbody>
+    </table>
+
+    <script>
+      // Fetch data from the backend API
+      async function fetchPrice() {
+        try {
+          const response = await fetch("/get_price"); // Wait for the response
+          const data = await response.json(); // Parse the JSON response
+          console.log(data[0].name);
+          // Generate HTML using template literals
+
+          data.forEach(function (item, index) {
+            // Construct the HTML for each item
+            const priceHtmlName = `${item.name}`;
+            const priceHtmlPrice = `$${item.price}`;
+
+            // Corrected: Use backticks to evaluate the template literals
+            document.getElementById(
+              "tableId"
+            ).innerHTML += `<tr><td id="r${index}c0"></td><td id="r${index}c1"></td></tr>`;
+
+            // Dynamically update the table based on index
+            document.getElementById(`r${index}c0`).innerText = priceHtmlName;
+            document.getElementById(`r${index}c1`).innerText = priceHtmlPrice;
+          });
+
+          document.getElementById("getPrinceId").style.display = "None";
+
+          // Update HTML element with id 'r1c1'
+        } catch (error) {
+          console.error("Error fetching the data:", error); // Error handling
+        }
+      }
+
+      function clean() {
+        document.getElementById("tableId").innerHTML = "";
+        document.getElementById("getPrinceId").style.display = "inline";
+      }
+
+      async function fetchPriceHigher() {
+        try {
+          clean();
+          const inputValue = parseInt(
+            document.getElementById("inputBox").value
+          );
+          const response = await fetch("/get_price"); // Wait for the response
+          const data = await response.json(); // Parse the JSON response
+          let count = 0;
+
+          // Assuming 'data' is an array of items, and 'inputValue' is the threshold price
+
+          data.forEach(function (item) {
+            const priceHtmlName = `${item.name}`;
+            const priceHtmlPrice = `$${item.price}`;
+            console.log(item.price);
+            console.log(inputValue);
+            // Check if the price is greater than the input value
+            if (item.price > inputValue) {
+              // Dynamically update the table based on index
+              console.log("here");
+
+              // Construct the HTML for each item
+              const priceHtmlName = `${item.name}`;
+              const priceHtmlPrice = `$${item.price}`;
+
+              // Corrected: Use backticks to evaluate the template literals
+              document.getElementById(
+                "tableId"
+              ).innerHTML += `<tr><td id="r${count}c0"></td><td id="r${count}c1"></td></tr>`;
+
+              // Dynamically update the table based on index
+              document.getElementById(`r${count}c0`).innerText = priceHtmlName;
+              document.getElementById(`r${count}c1`).innerText = priceHtmlPrice;
+
+              count++;
+            }
+          });
+
+          // Update HTML element with id 'r1c1'
+        } catch (error) {
+          console.error("Error fetching the data:", error); // Error handling
+        }
+      }
+    </script>
+
+    <button id="getPrinceId" onclick="fetchPrice()">Get Prices</button>
+    <button onclick="clean()">Clean</button>
+
+    <label for="inputBox">Get price higher than:</label>
+    <input type="text" id="inputBox" />
+    <button onclick="fetchPriceHigher()">Send</button>
+  </body>
+</html>

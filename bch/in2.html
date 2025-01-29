@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Item List</h1>
+    <table id="itemTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        // Fetch data from the backend API
+        fetch('http://127.0.0.1:5000/api/items')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#itemTable tbody');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    const priceCell = document.createElement('td');
+                    nameCell.textContent = item.name;
+                    priceCell.textContent = `$${item.price.toFixed(2)}`;
+                    row.appendChild(nameCell);
+                    row.appendChild(priceCell);
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>

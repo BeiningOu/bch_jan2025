@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Price Display</title>
+    <script>
+      async function fetchPrice() {
+        try {
+          const response = await fetch("/get_price");
+          const data = await response.json();  // Parse the JSON response
+          const prices = data.prices;  // Get the list of prices
+
+          // Generate HTML using template literals
+          let priceHtml = `${prices[0].name}: $${prices[0].price}`;
+
+          console.log(prices[0].name); // Log for debugging
+
+          document.getElementById("price").innerHTML = priceHtml;  // Inject into the page
+        } catch (error) {
+          console.error("Error fetching price:", error);
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Product Prices</h1>
+    <button onclick="fetchPrice()">Get Prices</button>
+    <div id="price"></div>  <!-- This will display the fetched price -->
+
+   <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Row 1, Column 1</td>
+                <td>Row 1, Column 2</td>
+            </tr>
+            <tr>
+                <td>Row 2, Column 1</td>
+                <td>Row 2, Column 2</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Server-side rendered list of prices (Flask template) -->
+    <ul>
+      {% for item in price_list %}
+      <li>{{ item.name }}: ${{ item.price }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
